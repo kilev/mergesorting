@@ -1,2 +1,2 @@
-1. Run Maven:Package (in console : mvn package)
+1. использовать команду Maven:Package в папке проекта (in console : mvn package)
 2. Run java -jar ./target/merge-sorting-1.0.jar

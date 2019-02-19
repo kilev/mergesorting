@@ -1,8 +1,5 @@
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,152 +13,127 @@ public class Main {
 
         List<String> cmdLine = Arrays.asList(args);
         boolean reverseSort = false;
-        boolean intType; // data type
-        int startParsing;// marker to start to read in[1...n].txt files
-        int secondKeyMarker = 1;
-        String outPathName;
+        boolean intType = true; // data type
 
-        if(cmdLine.size() <= 3){// checking minimal number of args
-            System.out.println("Too few args to start: " + cmdLine.size());
+        if (cmdLine.size() <= 3) {// checking minimal number of args
+            System.out.println("ERROR: Too few args to start: " + cmdLine.size());
             System.exit(1);
         }
 
-        if(cmdLine.get(0).equals("-a")){
-            reverseSort = false;
-            outPathName = cmdLine.get(2);
-            startParsing = 3;
-        }
-        else if(cmdLine.get(0).equals("-d")) {
-            reverseSort = true;
-            outPathName = cmdLine.get(2);
-            startParsing = 3;
-        } else {
-            outPathName = cmdLine.get(1);
-            startParsing = 2;
-        }
-
-        if (startParsing == 3)
-            secondKeyMarker = 1;
-        else
-            secondKeyMarker = 0;
-        if(cmdLine.get(secondKeyMarker).equals("-i"))
-            intType = true;
-        else if(cmdLine.get(secondKeyMarker).equals("-s"))
-            intType = false;
-        else {
-            System.out.println("wrong key");
-            System.exit(1);
+        List<String> files = new ArrayList<>();
+        for (String item : cmdLine) {
+            if (item.startsWith("-")) {
+                if (item.equals("-a")) { // ASCENDING sort
+                    reverseSort = false;
+                } else if (item.equals("-d")) {
+                    reverseSort = true;
+                } else if (item.equals("-s")) {
+                    intType = false;
+                } else if (item.equals("-i")) {
+                    intType = true;
+                } else {
+                    System.out.println("ERROR: Wrong key");
+                    System.exit(1);
+                }
+            } else {
+                files.add(item);
+            }
         }
 
+        String outPathName = files.get(0); // output
+        files.remove(0); // input
 
-
-
-
-        for (int i = startParsing; i < cmdLine.size(); i++){
-
-
-        }
         //PARSING-----------------------------------------
 
-        //READING-----------------------------------------
-//        try {
-//            String pathName1 = "in1.txt";
-//            File file = new File(pathName1);
-//            FileReader fileReader = new FileReader(file); // connect to input file
-//            BufferedReader bufferedReader = new BufferedReader(fileReader); // connect FileReader with BufferedReader
-//
-//            String line;
-//            while((line = bufferedReader.readLine()) != null) {
-//                int in1Array; // выводим содержимое файла на экран построчно
-//            }
-//
-//            bufferedReader.close(); // закрываем поток
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+
         //READING-----------------------------------------
 
+        List<String> dataArray = new ArrayList<>();
+        for (String path : files) {
+            try {
+                String pathName = path;
+                File file = new File(pathName);
+                FileReader fileReader = new FileReader(file); // connect to input file
+                BufferedReader bufferedReader = new BufferedReader(fileReader); // connect FileReader with BufferedReader
 
-        int[] inputMas = new int[]{1, 4, 2, 6, 4, 7, 4, 2, 5, 7, 4, 8, 1, 0, 100, 123, 423, 123, 432, 523, 43, 2, 34, 23, 4, 8};//test Array
+//                Object obj = new String("11");
+//
+//                Integer integerValue = (Integer)obj;
 
-        lounchSort(inputMas, reverseSort);
+                String line;
+                int i = 0;
+                while ((line = bufferedReader.readLine()) != null) {
+                    dataArray.add(line); // выводим содержимое файла на экран построчно
+                }
+
+                bufferedReader.close(); // закрываем поток
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        //READING-----------------------------------------
+
+        lounchSort(dataArray.toArray(new String[0]), reverseSort, intType);
+
         System.out.println("sort Array");
-        System.out.println("\t" + Arrays.toString(inputMas));
-
-        //WRITING-----------------------------------------
-        try{
-            File outputFile = new File(outPathName);
-
-            if(!outputFile.exists())
-                outputFile.createNewFile();
-            PrintWriter pw = new PrintWriter(outputFile);
-            for(int i = 0; i<inputMas.length; i++)
-                pw.println(inputMas[i]);
-            pw.close();
-
-        } catch (IOException e) {
-            System.out.println("ERROR: " + e);
-        }
-
-        //WRITING-----------------------------------------
-
-        /* args parsing and file loading
-        if(file.isExists()) {
-            file.read();
-        } else {
-            // fileName not exist
-            System.exit(1);
-        }
-
-        try{
-         /*   file.open("filename_from_args");
-            read .... file.getLinesCount, int[linesCount]
-            linesCount == 0 error .. exit(0)
-                    isInteger || isAlpha
-                 mas[0] = 23.59
-        }
-        catch (IOException e) {
-           System.out.println("Exception reading file :" + e.getMessage());
-        }
-        catch (IllegalFormatConversionException e) {
-            System.out.println("Exception initiating Integer array :" + e.getMessage());
-        }*/
-
+        //System.out.println("\t" + Arrays.toString(inputMas));
     }
 
     /**
+     * writing data in output file
+     * @param result
+     * @param outPathName
+     */
+    private static void writing(List result, String outPathName) {
+        try {
+            File outputFile = new File(outPathName);
+            if (!outputFile.exists())
+                outputFile.createNewFile();
+            PrintWriter pw = new PrintWriter(outputFile);
+
+            for (int i = 0; i < result.size(); i++)
+                //for( int i : result.)
+                pw.println(result.get(i));
+
+            pw.close();
+        } catch (IOException e) {
+            System.out.println("ERROR: " + e);
+        }
+    }
+
+
+    /**
      * Sort single Array (if he is unsorted)
-     * @param a Array to sort
+     * @param a           Array to sort
      * @param sortReverse boolean for reverse sorting order (false = asc, true = desc)
      * @return sorted array
      */
-    public static int[] lounchSort(int[] a, boolean sortReverse) {
+    public static String[] lounchSort(String[] a, boolean sortReverse, boolean intType) {
 
         int left = 0;
         int right = a.length - 1;
 
-        sortSingleMas(a, left, right, sortReverse);
-
+        sortSingleMas(a, left, right, sortReverse, intType);
         return a;
     }
 
     /**
      * recursive function sorting
-     * @param a Array to sort
-     * @param left left limit
-     * @param right right limit
+     * @param a           Array to sort
+     * @param left        left limit
+     * @param right       right limit
      * @param sortReverse method of sorting
      */
-    private static void sortSingleMas(int[] a, int left, int right, boolean sortReverse) {
+    private static void sortSingleMas(String[] a, int left, int right, boolean sortReverse, boolean intType) {
 
         if (right <= left)
             return;
 
         int mid = left + (right - left) / 2;
-        sortSingleMas(a, left, mid, sortReverse);
-        sortSingleMas(a, mid + 1, right, sortReverse);
+        sortSingleMas(a, left, mid, sortReverse, intType);
+        sortSingleMas(a, mid + 1, right, sortReverse, intType);
 
-        int[] buffer = copyOf(a, a.length);
+        String[] buffer = copyOf(a, a.length);
 
         int i = left, j = mid + 1;
         for (int m = left; m <= right; m++) {
@@ -172,10 +144,10 @@ public class Main {
             } else if (j > right) {
                 a[m] = buffer[i];
                 i++;
-            //} else if (buffer[j] < buffer[i]) {
-            } else if (check(buffer[i], buffer[j], sortReverse)) {
-                    a[m] = buffer[j];
-                    j++;
+                //} else if (buffer[j] < buffer[i]) {
+            } else if (compare(buffer[i], buffer[j], sortReverse, intType)) {
+                a[m] = buffer[j];
+                j++;
             } else {
                 a[m] = buffer[i];
                 i++;
@@ -185,16 +157,24 @@ public class Main {
 
     /**
      * func for checking sortReverse mode and compare elements
-     * @param i first element for compare
-     * @param j second element for compare
+     *
+     * @param i           first element for compare
+     * @param j           second element for compare
      * @param sortReverse sortReverse mode
      * @return result of compare
      */
-    private static boolean check(int i, int j, boolean sortReverse){
-
-        if(!sortReverse)
-            return (j < i);
-        else
-            return (i < j);
+    private static boolean compare(String i, String j, boolean sortReverse, boolean intType) {
+        if (intType) {
+            Integer intI = Integer.parseInt(i) ;
+            if (!sortReverse)
+                return (Integer.parseInt(j) <= Integer.parseInt(i));
+            else
+                return (Integer.parseInt(i) < Integer.parseInt(j));
+        } else {
+            if (!sortReverse)
+                return (((String) j).compareTo((String) i) <= 0);
+            else
+                return (((String) i).compareTo((String) j) > 0);
+        }
     }
 }
