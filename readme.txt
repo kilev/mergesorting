@@ -1,2 +1,7 @@
-1. использовать команду Maven:Package в папке проекта (in console : mvn package)
-2. Run java -jar ./target/merge-sorting-1.0.jar
+1. необходимо что бы был установлен Maven сборщик(сборщик java проекта).
+2. разархивировать проект
+3. использовать команду Maven:Package в папке проекта (in console : mvn package) P.S Если Maven не добавлен в Path, нужно прописать ему путь вручную. Пример
+"C:\Program Files\maven\bin\"
+4. положить в корень собраного проекта фходные файлы
+5. перейти в папку /target внутри проекта и запустить jar файл с нужными ключами и названиями фходных/выходного файла
+6. Run java -jar merge-sorting-1.0.jar

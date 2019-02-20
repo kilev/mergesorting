@@ -43,7 +43,21 @@ public class MainTest {
         System.out.println("TEST : Sort reverse test:");
         System.out.println("\tinput array: " + Arrays.toString(input));
 
-        Object[] output = Main.lounchSort(input, false, false);
+        String[] output = Main.lounchSort(input, false, false);
+        System.out.println("\toutput array: " + Arrays.toString(input));
+
+        Assert.assertArrayEquals(output, result);
+    }
+    @Test
+    //@Ignore
+    public void sortStringArrayReverseTest() {
+        String[] input = new String[]{"a1", "c", "b", "h"};
+        String[] result = new String[]{"h", "c", "b", "a1"};
+
+        System.out.println("TEST : Sort reverse test:");
+        System.out.println("\tinput array: " + Arrays.toString(input));
+
+        String[] output = Main.lounchSort(input, true, false);
         System.out.println("\toutput array: " + Arrays.toString(input));
 
         Assert.assertArrayEquals(output, result);

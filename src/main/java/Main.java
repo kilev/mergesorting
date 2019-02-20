@@ -56,27 +56,21 @@ public class Main {
                 FileReader fileReader = new FileReader(file); // connect to input file
                 BufferedReader bufferedReader = new BufferedReader(fileReader); // connect FileReader with BufferedReader
 
-//                Object obj = new String("11");
-//
-//                Integer integerValue = (Integer)obj;
-
                 String line;
-                int i = 0;
                 while ((line = bufferedReader.readLine()) != null) {
-                    dataArray.add(line); // выводим содержимое файла на экран построчно
+                    dataArray.add(line);
                 }
 
-                bufferedReader.close(); // закрываем поток
+                bufferedReader.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         //READING-----------------------------------------
 
-        lounchSort(dataArray.toArray(new String[0]), reverseSort, intType);
-
-        System.out.println("sort Array");
-        //System.out.println("\t" + Arrays.toString(inputMas));
+        String[] outPutData = lounchSort(dataArray.toArray(new String[0]), reverseSort, intType);
+        writing(new ArrayList<>(Arrays.asList(outPutData)), outPathName);
+        System.out.println("Array sorted");
     }
 
     /**
@@ -92,7 +86,6 @@ public class Main {
             PrintWriter pw = new PrintWriter(outputFile);
 
             for (int i = 0; i < result.size(); i++)
-                //for( int i : result.)
                 pw.println(result.get(i));
 
             pw.close();
@@ -144,7 +137,6 @@ public class Main {
             } else if (j > right) {
                 a[m] = buffer[i];
                 i++;
-                //} else if (buffer[j] < buffer[i]) {
             } else if (compare(buffer[i], buffer[j], sortReverse, intType)) {
                 a[m] = buffer[j];
                 j++;
@@ -165,16 +157,15 @@ public class Main {
      */
     private static boolean compare(String i, String j, boolean sortReverse, boolean intType) {
         if (intType) {
-            Integer intI = Integer.parseInt(i) ;
             if (!sortReverse)
                 return (Integer.parseInt(j) <= Integer.parseInt(i));
             else
                 return (Integer.parseInt(i) < Integer.parseInt(j));
         } else {
             if (!sortReverse)
-                return (((String) j).compareTo((String) i) <= 0);
+                return ((j).compareTo( i) <= 0);
             else
-                return (((String) i).compareTo((String) j) > 0);
+                return (( j).compareTo( i) > 0);
         }
     }
 }
